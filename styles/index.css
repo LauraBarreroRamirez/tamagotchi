@@ -1,0 +1,53 @@
+body {
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(90deg, rgba(1,190,241,1) 0%, rgba(167,63,119,1) 48%);
+}
+
+.container-egg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid red;
+    width: 100%;
+    overflow: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    height: 10%;
+}
+
+h1{
+    color: white;
+    font-size: 3rem;
+}
+.egg-image{
+    width: 90%;
+}
+@media (max-width: 340px) {
+    h1{
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 768px) {
+    .egg-image{
+        width: 70%;
+    }
+}
+@media (min-width: 1024px) {
+    .egg-image{
+        width: 50%;
+    }
+}
+@media (min-width: 1440px) {
+    .egg-image{
+        width: 50%;
+    }
+    .container-egg{
+        height: 38rem;
+    }
+}
+
+
