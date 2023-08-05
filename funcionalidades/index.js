@@ -7,76 +7,77 @@ const energyLevel = document.getElementById("energyLevel")
 const namePet = document.getElementById("namePet");
 const myPet = init("Fuffly")
 
-
-
 function init(name) {
     let energy = 100;
-    let age = 0;
-    energyLevel.textContent=`Energy Level is:${energy}`;
+    energyLevel.textContent=`Energy Level is: ${energy}, Age: 0`;
     namePet.textContent=name
     
     return {
         namePet: name,
         energy,
-        agePet: 0,
-        statusPet: ''
+        age: 0,
+        statusPet: '',
+        canSleep: false,
+        canEat: false,
+        canPlay: true
     }
 } 
 
+function updatePetStatus (pet, reason, needValidation)  {
+    pet.canSleep = pet.energy < 100
+    pet.canEat = pet.energy <= 80
+    pet.canPlay = pet.energy > 20 && pet.energy <= 100
+
+    if(pet.energy === 100 && needValidation) {
+        pet.age += 1
+    }
+    
+    if(!pet.canPlay && reason === 'play'){
+        Image.src="../gif/cansado.gif";
+        text.textContent= `Estoy cansado, Necesito dormir`;
+    }
+        
+    if(!pet.canSleep && reason === 'sleep') {
+        Image.src="../gif/lleno.gif";
+        text.textContent= "Estoy descansado, Ya no tengo sueño";
+    }
+        
+    if(!pet.canEat && reason === 'eat') {
+        Image.src="../gif/lleno.gif";
+        text.textContent= "Estoy lleno, No quiero comer mas";
+    }
+
+    energyLevel.textContent=`Energy Level is: ${pet.energy}, Age: ${pet.age}`
+}
+
 function sleep (pet) {
-    if (pet.energy <= 20) {
+    if(pet.canSleep) {
         Image.src="../gif/durmiendo.gif";
         text.textContent= `${pet.namePet} esta durmiendo`;
         pet.statusPet = "sleeping";
-        pet.age++;
-        pet.energy += 20;
-        energyLevel.textContent=`El nivel de energia es:${pet.energy}`;    
-    } else if(pet.energy < 100){
-        text.textContent= `${pet.namePet} esta durmiendo aún`;
-        pet.energy += 20
-        energyLevel.textContent=`El nivel de energia es:${pet.energy}`
-        if (pet.energy === 100) {
-            Image.src="../gif/principal.gif"
-            text.textContent= "Ya no quiero dormir";
-        }
-    } else {
-        text.textContent= "I don't need to sleep";
-        energyLevel.textContent=`Energy Level is:${pet.energy}`
-    }
+        pet.energy += 20 
+    } 
+    updatePetStatus(pet, 'sleep', pet.canSleep)
 }
 
 function play (pet) {
-    if (pet.energy >20) {
-        Image.src="../gif/jugando.gif";
-        text.textContent= `${pet.namePet} esta jugando`;
+    if(pet.canPlay) {
+        pet.energy -= 20
         pet.statusPet = "jugando";
-        pet.age++;
-        pet.energy -= 20;
-        energyLevel.textContent=`Energy Level is:${pet.energy}`;   
-        if (pet.energy === 40) {
-            Image.src="../gif/comida.gif";
-            text.textContent= `${pet.namePet} tiene hambre`; }     
-    } else if(pet.energy <= 20){
-        Image.src="../gif/cansado.gif";
-        text.textContent= "Estoy cansado, necesito dormir";
-        energyLevel.textContent=`Energy Level is:${pet.energy}` 
-    } 
+        text.textContent= "";
+        Image.src="../gif/jugando.gif";  
+    }
+    updatePetStatus(pet, 'play', pet.canPlay)
 }
 
 function eat (pet) {
-    if (pet.energy === 40) {
-        Image.src="../gif/comiendo.gif";
-        text.textContent= `${pet.namePet} tiene hambre`;
-        pet.statusPet = "comiendo";
-        pet.age++;
-        pet.energy += 20;
-        energyLevel.textContent=`Energy Level is:${pet.energy}`;       
-    } else if(pet.energy <= 80){
-        Image.src="../gif/lleno.gif";
-        text.textContent= "Estoy lleno";
+    if(pet.canEat){
         pet.energy += 20
-        energyLevel.textContent=`Energy Level is:${pet.energy}`
-    } 
+        Image.src="../gif/comiendo.gif";
+        pet.statusPet = "comiendo" 
+        text.textContent= "";
+    }
+    updatePetStatus(pet, 'eat', pet.canEat)
 }
 
 // function age (pet) {
